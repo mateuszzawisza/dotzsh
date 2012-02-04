@@ -12,3 +12,6 @@ alias tn="tmux new-session -s"
 alias vi="vim"
 alias ctags="`brew --prefix`/bin/ctags"
 alias create_ctags="ctags -R --exclude=.git --exclude=log *"
+
+alias t='tmux -u'
+

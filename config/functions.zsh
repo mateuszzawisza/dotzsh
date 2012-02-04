@@ -1,13 +1,3 @@
-
-chef_vzaar=/Users/mateuszzawisza/workspace/chef_vzaar
-vzaar_app=/Users/mateuszzawisza/workspace/vzaar-app
-
-alias ggpullr='git pull --rebase origin $(current_branch)'
-alias ggpnpr='git pull --rebase origin $(current_branch) && git push origin $(current_branch)'
-
-
-alias t='tmux -u'
-
 load_rvm(){
   echo "loading RVM into session...."
   [[ -s "/Users/mateuszzawisza/.rvm/scripts/rvm" ]] && source "/Users/mateuszzawisza/.rvm/scripts/rvm"
@@ -51,6 +41,9 @@ function as(){
   echo "************************************************************\n"
 }
 
+_as() { compadd 'vzaar'; }
+compdef _as as
+
 # load auto scaling environment
 function rds(){
   local source_file; source_file=()
@@ -70,23 +63,6 @@ function rds(){
   echo "loaded $1 environment"
   echo "************************************************************\n"
 }
-
-
-function sshk(){
-  local key; key=()
-  if [[ $1 == "adrian" ]]; then
-    key=(/Volumes/vzaar/aws_adrian_account/key-pair/mateusz_adrian_account.pem)
-  elif [[ $1 == "admin" ]]; then
-    key=(/Volumes/vzaar/aws_admin_account/mateusz-east.pem)
-  elif [[ $1 == "dh" ]]; then
-    key=(/Volumes/dateharvard/aws/czikokey.pem)
-  else
-    echo "bad argument!"
-    return -1
-  fi
-  ssh -i ${key} $2
-}
-
 
 # load chef environment
 
@@ -117,11 +93,7 @@ function chef_env(){
   echo "Loaded Knife file: ${config_file_path}"
   ln -s ${config_file_path} ${knife_rb}
 
-  
-}
 
-
-function vzaar_app() {
-  cd ~/workspace/vzaar_app
-  source .env_vars
 }
+_chef_env() { compadd 'vzaar' 'playground'; }
+compdef _chef_env chef_env
