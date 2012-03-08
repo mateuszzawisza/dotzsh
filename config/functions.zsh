@@ -97,3 +97,9 @@ function chef_env(){
 }
 _chef_env() { compadd 'vzaar' 'playground'; }
 compdef _chef_env chef_env
+
+
+
+upload_cookbook() { knife cookbook upload $1 }
+_upload_cookbook() { _files -W $PWD/cookbooks/ -/; }
+compdef _upload_cookbook upload_cookbook

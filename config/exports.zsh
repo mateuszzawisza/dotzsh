@@ -1,6 +1,4 @@
 
-# setup PATH variables
-export PATH=/usr/local/bin:/usr/local/sbin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/X11/bin
 
 export CLICOLOR=true
 # this is default value
