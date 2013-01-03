@@ -55,3 +55,7 @@ bindkey "\e[3~" delete-char
 ## Fix weird sequence that rxvt produces
 #bindkey -s '^[[Z' '\t'
 #
+#
+autoload -U edit-command-line
+zle -N edit-command-line
+bindkey '\C-x\C-e' edit-command-line

@@ -1,5 +1,5 @@
 # setup PATH variables
-export PATH=/usr/local/bin:/usr/local/sbin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/X11/bin
+export PATH=/Users/mateuszzawisza/.rbenv/shims:/usr/local/bin:/usr/local/sbin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/X11/bin:/usr/local/share/python
 
 #export DISPLAYHOST=true
 #export LOCALNAME="home"
@@ -18,3 +18,16 @@ sudo-command-line() {
 zle -N sudo-command-line
 
 bindkey "^os" sudo-command-line
+
+# rbenv loader
+#eval "$(rbenv init -)" 
+#
+#
+#
+export COMP_POINT
+export COMP_LINE
+
+autoload -U bashcompinit
+bashcompinit
+
+complete -C aws_completer aws

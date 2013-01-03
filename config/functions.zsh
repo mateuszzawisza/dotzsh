@@ -1,48 +1,65 @@
-load_rvm(){
-  echo "loading RVM into session...."
-  [[ -s "/Users/mateuszzawisza/.rvm/scripts/rvm" ]] && source "/Users/mateuszzawisza/.rvm/scripts/rvm"
-  echo "done!"
-}
+#!/bin/zsh
 
-if [[ $LOAD_RVM == "1" ]]; then
-  load_rvm
-fi
+#load_rvm(){
+#  echo "loading RVM into session...."
+#  [[ -s "/Users/mateuszzawisza/.rvm/scripts/rvm" ]] && source "/Users/mateuszzawisza/.rvm/scripts/rvm"
+#  echo "done!"
+#}
 
-load_ohmyzsh(){
-  echo "loading Oh My Zshell into session...."
-  [[ -s "/Users/mateuszzawisza/.zshrc_ohmyzsh" ]] && source "/Users/mateuszzawisza/.zshrc_ohmyzsh"
-  echo "done!"
-}
+#if [[ $LOAD_RVM == "1" ]]; then
+#  load_rvm
+#fi
 
+#load_ohmyzsh(){
+#  echo "loading Oh My Zshell into session...."
+#  [[ -s "/Users/mateuszzawisza/.zshrc_ohmyzsh" ]] && source "/Users/mateuszzawisza/.zshrc_ohmyzsh"
+#  echo "done!"
+#}
 
-# load auto scaling environment
-function as(){
+_as() { compadd 'vzaar'; }
+compdef _as as
+
+# be sure to load aws functions first
+source $HOME/.zsh/config/aws.zsh
+
+function aws_load(){
   local source_file; source_file=()
   local secure_bucket; secure_bucket=()
-  if [[ $1 == "vzaar" ]]; then
+  if [[ $1 == "elb" ]]; then
+    aws_elb $2
+    return 0
+  elif [[ $1 == "as" ]]; then
+    aws_as $2
+    return 0
+  elif [[ $1 == "vzaar" ]]; then
     source_file=("/Volumes/vzaar/aws_admin_account/export_env_variables")
     secure_bucket=("/Users/mateuszzawisza/Dropbox/vzaar/vzaar.dmg ")
   elif [[ $1 == "vzaar_adrian" ]]; then
     source_file=("/Volumes/vzaar/aws_adrian_account/export_env_variables")
     secure_bucket=("/Users/mateuszzawisza/Dropbox/vzaar/vzaar.dmg ")
-  elif [[ $1 == "dh" ]]; then
-    source_file=("/Volumes/dateharvard/aws/export_env_variables")
-    secure_bucket=("/Users/mateuszzawisza/Dropbox/dateharvard/dateharvard.dmg")
+  elif [[ $1 == "applicake" ]]; then
+    source_file=("/Volumes/applicake/aws/applicake_env_vars")
+    secure_bucket=("/Users/mateuszzawisza/Dropbox/applicake/applicake.dmg")
+  elif [[ $1 == "home" ]]; then
+    source_file=("/Volumes/Sand/aws/export_env_variables")
   else
     echo "bad argument!"
     return -1
   fi
 
-  cd /Users/mateuszzawisza/Dropbox/vzaar/ec2_tools/AutoScaling-1.0.39.0/bin
+
   source ${source_file}
+  PATH=$PATH:$EC2_HOME/bin:$AWS_AUTO_SCALING_HOME/bin:$AWS_RDS_HOME/bin:$AWS_ELB_HOME/bin
+  export PATH
+
   echo "\n\n\n"
   echo "************************************************************"
   echo "loaded $1 environment"
   echo "************************************************************\n"
 }
 
-_as() { compadd 'vzaar'; }
-compdef _as as
+_aws_load() { compadd 'vzaar' 'applicake' 'vzaar_adrian' 'home'; }
+compdef _aws aws
 
 # load auto scaling environment
 function rds(){
@@ -103,3 +120,21 @@ compdef _chef_env chef_env
 upload_cookbook() { knife cookbook upload $1 }
 _upload_cookbook() { _files -W $PWD/cookbooks/ -/; }
 compdef _upload_cookbook upload_cookbook
+
+
+
+# make sure alias.zsh is loaded before this function
+setopt bash_rematch
+function tn(){
+  local tmux_session_name
+  local regex; regex=".*\/(.*)$"
+
+  if [[ -n $1 ]]; then
+    tmux_session_name=$1
+  else
+    if [[ $PWD =~ $regex ]]; then
+     tmux_session_name=$BASH_REMATCH[2]
+    fi
+  fi
+  t new-session -s $tmux_session_name
+}
