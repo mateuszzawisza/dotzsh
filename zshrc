@@ -27,7 +27,7 @@ bindkey "^os" sudo-command-line
 export COMP_POINT
 export COMP_LINE
 
-autoload -U bashcompinit
-bashcompinit
-
-complete -C aws_completer aws
+#autoload -U bashcompinit
+#bashcompinit
+#
+#complete -C aws_completer aws
